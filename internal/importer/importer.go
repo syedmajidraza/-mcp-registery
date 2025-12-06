@@ -63,21 +63,16 @@ func (s *Service) ImportFromPath(ctx context.Context, path string) error {
 
 // readSeedFile reads seed data from various sources
 func readSeedFile(ctx context.Context, path string) ([]*apiv0.ServerJSON, error) {
+
 	var data []byte
 	var err error
 
+	// Only allow local file paths for seed data
 	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
-		// Handle HTTP URLs
-		if strings.HasSuffix(path, "/v0/servers") || strings.Contains(path, "/v0/servers") {
-			// This is a registry API endpoint - fetch paginated data
-			return fetchFromRegistryAPI(ctx, path)
-		}
-		// This is a direct file URL
-		data, err = fetchFromHTTP(ctx, path)
-	} else {
-		// Handle local file paths
-		data, err = os.ReadFile(path)
+		return nil, fmt.Errorf("remote seed URLs are disabled in this build")
 	}
+	// Handle local file paths
+	data, err = os.ReadFile(path)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to read seed data from %s: %w", path, err)

@@ -14,7 +14,7 @@ type RegistryExtensions struct {
 }
 
 type ResponseMeta struct {
-	Official *RegistryExtensions `json:"io.modelcontextprotocol.registry/official,omitempty" doc:"Official MCP registry metadata"`
+	Official *RegistryExtensions `json:"io.modelcontextprotocol.registry/official,omitempty" doc:"Syed MCP registry metadata"`
 }
 
 type ServerResponse struct {
