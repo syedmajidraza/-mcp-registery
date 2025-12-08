@@ -132,7 +132,7 @@ func handle404(w http.ResponseWriter, r *http.Request) {
 // NewHumaAPI creates a new Huma API with all routes registered
 func NewHumaAPI(cfg *config.Config, registry service.RegistryService, mux *http.ServeMux, metrics *telemetry.Metrics, versionInfo *v0.VersionBody) huma.API {
 	// Create Huma API configuration
-	humaConfig := huma.DefaultConfig("Syed MCP Registry", "1.0.0")
+	humaConfig := huma.DefaultConfig("yourcompany MCP Registry", "1.0.0")
 	humaConfig.Info.Description = "A community driven registry service for Model Context Protocol (MCP) servers.\n\n[GitHub repository](https://github.com/modelcontextprotocol/registry) | [Documentation](https://github.com/modelcontextprotocol/registry/tree/main/docs)"
 	// Disable $schema property in responses: https://github.com/danielgtaylor/huma/issues/230
 	humaConfig.CreateHooks = []func(huma.Config) huma.Config{}

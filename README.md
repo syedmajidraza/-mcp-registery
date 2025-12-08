@@ -1,72 +1,110 @@
 
+# yourcompany MCP Registry
 
-# Syed MCP Registry
+yourcompany MCP Registry is a local, isolated MCP registry that provides MCP clients with a list of MCP servers. This version is rebranded and restricted to only two local MCP servers, with all remote aggregation and fallback to public registries disabled.
 
-This is a simple, local MCP registry for development and testing. It loads MCP servers from `data/seed.json` and runs on your machine only.
+[**Quickstart**](docs/modelcontextprotocol-io/quickstart.mdx) | [**Ecosystem Vision**](docs/design/ecosystem-vision.md) | 📖 **[Full documentation](./docs)**
 
-## How to Compile and Run Locally
+
+## Project Status
+
+**2025-12-05 update:**
+- The registry is now fully local-only and rebranded as "yourcompany MCP Registry."
+- Only two MCP servers are listed, as defined in `data/seed.json`.
+- Remote aggregation and fallback to public registries are disabled at the code level.
+- Docker Compose and database setup have been updated for a clean, isolated development environment.
+
+
+## Quick Start
+
 
 ### Prerequisites
-- Docker
-- Go 1.24.x
 
-### Steps
-1. Clone this repository:
-     ```bash
-     git clone https://github.com/syedmajidraza/test_mcp.git
-     cd test_mcp
-     ```
-2. Start the registry server:
-     ```bash
-     docker-compose up --build -d
-     ```
-     The registry will be available at [http://localhost:8080](http://localhost:8080).
+- **Docker**
+- **Go 1.24.x**
 
-## How to Add MCP Servers
 
-1. Open `data/seed.json` in your editor.
-2. Add a new MCP server entry using the following format:
-     ```json
-     {
-         "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-         "name": "your-namespace/your-mcp-server",
-         "description": "Description of your MCP server.",
-         "repository": {
-             "url": "https://github.com/syedmajidraza/test_mcp.git",
-             "source": "github"
-         },
-         "version": "1.0.0",
-         "packages": [
-             {
-                 "registryType": "npm",
-                 "identifier": "your-npm-package",
-                 "version": "1.0.0",
-                 "runtimeHint": "npx",
-                 "transport": { "type": "stdio" }
-             }
-         ]
-     }
-     ```
-3. Save the file.
-4. Restart the registry to load the new server:
-     ```bash
-     docker-compose down
-     docker-compose up --build -d
-     ```
-5. Visit [http://localhost:8080](http://localhost:8080) to see your MCP server listed.
+#### Running the server
 
-## Useful Commands
+```bash
+# Start the local yourcompany MCP Registry environment
+docker-compose up --build -d
+```
 
-- Run tests and lint:
-    ```bash
-    make check
-    ```
-- Build the publisher CLI:
-    ```bash
-    make publisher
-    ./bin/mcp-publisher --help
-    ```
+This starts the registry at [`localhost:8080`](http://localhost:8080) with PostgreSQL. The database uses ephemeral storage and is reset each time you restart the containers, ensuring a clean state for development and testing. The registry only loads the two MCP servers defined in `data/seed.json` and does not aggregate from any remote sources.
 
-## Documentation
+Configuration is managed via [docker-compose.yml](./docker-compose.yml). The default database name is now `mcp-registry-test` for a clean, isolated state.
 
-See the [docs](./docs) folder for more details.
+
+<!--
+## Screenshot
+No screenshot is currently included. Add a screenshot of the yourcompany MCP Registry UI here if desired.
+-->
+
+
+## Publishing a Server
+
+To publish a server, use the CLI:
+
+```bash
+make publisher
+./bin/mcp-publisher --help
+```
+
+See [the publisher guide](./docs/modelcontextprotocol-io/quickstart.mdx) for more details.
+
+
+## Other Commands
+
+```bash
+# Run lint, unit tests, and integration tests
+make check
+```
+
+Run `make help` to see all available commands.
+
+
+## Architecture
+
+### Project Structure
+
+```
+├── cmd/                     # Application entry points
+│   └── publisher/           # Server publishing tool
+├── data/                    # Seed data
+├── deploy/                  # Deployment configuration (Pulumi)
+├── docs/                    # Documentation
+├── internal/                # Private application code
+│   ├── api/                 # HTTP handlers and routing
+│   ├── auth/                # Authentication (GitHub OAuth, JWT, namespace blocking)
+│   ├── config/              # Configuration management
+│   ├── database/            # Data persistence (PostgreSQL)
+│   ├── service/             # Business logic
+│   ├── telemetry/           # Metrics and monitoring
+│   └── validators/          # Input validation
+├── pkg/                     # Public packages
+│   ├── api/                 # API types and structures
+│   │   └── v0/              # Version 0 API types
+│   └── model/               # Data models for server.json
+├── scripts/                 # Development and testing scripts
+├── tests/                   # Integration tests
+└── tools/                   # CLI tools and utilities
+    └── validate-*.sh        # Schema validation tools
+```
+
+
+### Authentication
+
+Publishing supports multiple authentication methods:
+- **GitHub OAuth**
+- **GitHub OIDC**
+- **DNS verification**
+- **HTTP verification**
+
+The registry validates namespace ownership when publishing. For example:
+- To publish `ai.alpic.test/test-mcp-server`, you must prove ownership of the relevant namespace.
+
+
+## More Documentation
+
+See the [documentation](./docs) for more details.

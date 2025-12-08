@@ -50,6 +50,9 @@ func NewServer(cfg *config.Config, registryService service.RegistryService, metr
 
 	api := router.NewHumaAPI(cfg, registryService, mux, metrics, versionInfo)
 
+	// Register /sse endpoint for Server-Sent Events
+	mux.HandleFunc("/sse", v0.SSEHandler)
+
 	// Configure CORS with permissive settings for public API
 	corsHandler := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},

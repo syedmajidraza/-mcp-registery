@@ -1,39 +1,41 @@
 [
   {
     "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-    "name": "ai.alpic.test/test-mcp-server",
-    "description": "Test MCP server for ai.alpic.test.",
+    "name": "io.github.microsoft/markitdown-mcp",
+    "description": "Microsoft MarkItDown MCP server - Converts various file formats (PDF, Word, Excel, PowerPoint, images, audio, HTML) to Markdown format.",
     "repository": {
-      "url": "https://github.com/alpic/ai.alpic.test-test-mcp-server.git",
+      "url": "https://github.com/microsoft/markitdown",
       "source": "github"
     },
-    "version": "1.0.0",
+    "version": "0.0.1",
     "packages": [
       {
-        "registryType": "npm",
-        "identifier": "ai-alpic-test-mcp-server",
-        "version": "1.0.0",
-        "runtimeHint": "npx",
-        "transport": { "type": "stdio" }
+        "registryType": "pypi",
+        "identifier": "markitdown-mcp",
+        "version": "0.0.1",
+        "transport": {
+          "type": "stdio"
+        }
       }
     ]
   },
   {
     "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-    "name": "microsoft/markitdown",
-    "description": "Microsoft Markitdown MCP server.",
+    "name": "io.github.postmanlabs/postman-mcp-server",
+    "description": "Postman MCP server.",
     "repository": {
-      "url": "https://github.com/microsoft/markitdown-mcp-server.git",
+      "url": "https://github.com/postmanlabs/postman-mcp-server.git",
       "source": "github"
     },
     "version": "1.0.0",
     "packages": [
       {
         "registryType": "npm",
-        "identifier": "markitdown-mcp-server",
+        "identifier": "postman-mcp-server",
         "version": "1.0.0",
-        "runtimeHint": "npx",
-        "transport": { "type": "stdio" }
+        "transport": {
+          "type": "stdio"
+        }
       }
     ]
   }
