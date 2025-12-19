@@ -42,6 +42,29 @@ No screenshot is currently included. Add a screenshot of the yourcompany MCP Reg
 -->
 
 
+## Installing MCP Servers
+
+The registry includes a one-click installer for easy local installation of MCP servers.
+
+### Option 1: One-Click Installation (Recommended)
+
+1. Start the installer daemon:
+```bash
+make installer
+./bin/mcp-installer
+```
+
+2. Open [http://localhost:8080](http://localhost:8080) in your browser
+3. Click the green **"Install"** button on any server
+4. Watch real-time installation progress
+
+See [the installer guide](./docs/INSTALLER.md) for complete documentation.
+
+### Option 2: Manual Installation
+
+Click the **"Copy"** button on any server to copy the npm install command, then paste it into your terminal.
+
+
 ## Publishing a Server
 
 To publish a server, use the CLI:
@@ -70,7 +93,9 @@ Run `make help` to see all available commands.
 
 ```
 ├── cmd/                     # Application entry points
-│   └── publisher/           # Server publishing tool
+│   ├── installer/           # Local installation daemon
+│   ├── publisher/           # Server publishing tool
+│   └── registry/            # Main registry server
 ├── data/                    # Seed data
 ├── deploy/                  # Deployment configuration (Pulumi)
 ├── docs/                    # Documentation

@@ -289,7 +289,9 @@
                     </div>
                 `;
 
+                const installSection = createInstallSection(server, card);
                 card.appendChild(header);
+                card.appendChild(installSection);
                 container.appendChild(card);
             });
         }
@@ -354,9 +356,195 @@
                     </div>
                 `;
 
+                // Add install button section
+                const installSection = createInstallSection(server, card);
                 card.appendChild(header);
+                card.appendChild(installSection);
                 container.appendChild(card);
             });
+        }
+
+        // Create install section for server card
+        function createInstallSection(server, card) {
+            const installDiv = document.createElement('div');
+            installDiv.className = 'border-t px-5 py-3 bg-gray-50';
+
+            // Get the first npm package (most common case)
+            const npmPackage = server.packages?.find(pkg => pkg.registryType === 'npm');
+
+            if (npmPackage) {
+                const installCommand = `npm install -g ${npmPackage.identifier}`;
+                const buttonId = `install-${server.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
+
+                installDiv.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <code class="flex-1 text-xs bg-white px-3 py-2 rounded border border-gray-300 font-mono text-gray-700">${escapeHtml(installCommand)}</code>
+                        <button
+                            id="${buttonId}-install"
+                            class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded hover:bg-green-700 transition-colors whitespace-nowrap"
+                            onclick="event.stopPropagation(); installPackage('${escapeHtml(npmPackage.identifier)}', '${escapeHtml(npmPackage.version)}', '${escapeHtml(npmPackage.registryType)}', '${buttonId}-install', '${buttonId}-status')"
+                        >
+                            Install
+                        </button>
+                        <button
+                            id="${buttonId}-copy"
+                            class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors whitespace-nowrap"
+                            onclick="event.stopPropagation(); copyInstallCommand('${escapeHtml(installCommand)}', '${buttonId}-copy')"
+                        >
+                            Copy
+                        </button>
+                    </div>
+                    <div id="${buttonId}-status" class="mt-2 text-xs hidden"></div>
+                `;
+            } else {
+                installDiv.innerHTML = `
+                    <div class="text-xs text-gray-500 italic">
+                        No npm package available for installation
+                    </div>
+                `;
+            }
+
+            return installDiv;
+        }
+
+        // Install package locally via installer daemon
+        async function installPackage(packageIdentifier, version, registryType, buttonId, statusId) {
+            const button = document.getElementById(buttonId);
+            const statusDiv = document.getElementById(statusId);
+            const installerUrl = 'http://localhost:3456';
+
+            // Check if installer daemon is running
+            try {
+                const healthCheck = await fetch(`${installerUrl}/health`);
+                if (!healthCheck.ok) {
+                    throw new Error('Installer daemon not responding');
+                }
+            } catch (err) {
+                statusDiv.className = 'mt-2 text-xs text-red-600';
+                statusDiv.textContent = '⚠️ Installer daemon not running. Please start it with: make installer && ./bin/mcp-installer';
+                statusDiv.classList.remove('hidden');
+                return;
+            }
+
+            // Disable button and show progress
+            button.disabled = true;
+            button.textContent = 'Installing...';
+            statusDiv.className = 'mt-2 text-xs text-blue-600';
+            statusDiv.textContent = '⏳ Sending installation request...';
+            statusDiv.classList.remove('hidden');
+
+            try {
+                // Send install request
+                const response = await fetch(`${installerUrl}/install`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        packageIdentifier,
+                        version,
+                        registryType
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.message || 'Installation failed');
+                }
+
+                // Poll for status
+                const jobId = result.jobId;
+                statusDiv.textContent = `⏳ Installing ${packageIdentifier}...`;
+
+                await pollInstallationStatus(jobId, installerUrl, statusDiv, button);
+
+            } catch (err) {
+                console.error('Installation error:', err);
+                statusDiv.className = 'mt-2 text-xs text-red-600';
+                statusDiv.textContent = `❌ Installation failed: ${err.message}`;
+                button.disabled = false;
+                button.textContent = 'Install';
+            }
+        }
+
+        // Poll installation status
+        async function pollInstallationStatus(jobId, installerUrl, statusDiv, button) {
+            const maxAttempts = 60; // 60 seconds timeout
+            let attempts = 0;
+
+            const poll = async () => {
+                if (attempts >= maxAttempts) {
+                    statusDiv.className = 'mt-2 text-xs text-red-600';
+                    statusDiv.textContent = '❌ Installation timeout';
+                    button.disabled = false;
+                    button.textContent = 'Install';
+                    return;
+                }
+
+                attempts++;
+
+                try {
+                    const response = await fetch(`${installerUrl}/status/${jobId}`);
+                    const status = await response.json();
+
+                    if (status.status === 'completed') {
+                        statusDiv.className = 'mt-2 text-xs text-green-600';
+                        statusDiv.textContent = `✅ Successfully installed ${status.message}`;
+                        button.textContent = 'Installed';
+                        button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                        button.classList.add('bg-gray-400');
+                        setTimeout(() => {
+                            button.disabled = false;
+                            button.textContent = 'Reinstall';
+                            button.classList.remove('bg-gray-400');
+                            button.classList.add('bg-green-600', 'hover:bg-green-700');
+                        }, 3000);
+                        return;
+                    } else if (status.status === 'failed') {
+                        statusDiv.className = 'mt-2 text-xs text-red-600';
+                        statusDiv.textContent = `❌ ${status.message}`;
+                        if (status.error) {
+                            statusDiv.innerHTML += `<br><span class="text-gray-600">${escapeHtml(status.error)}</span>`;
+                        }
+                        button.disabled = false;
+                        button.textContent = 'Retry';
+                        return;
+                    } else {
+                        // Still running or pending
+                        setTimeout(poll, 1000);
+                    }
+                } catch (err) {
+                    console.error('Status check error:', err);
+                    statusDiv.className = 'mt-2 text-xs text-red-600';
+                    statusDiv.textContent = '❌ Failed to check installation status';
+                    button.disabled = false;
+                    button.textContent = 'Install';
+                }
+            };
+
+            poll();
+        }
+
+        // Copy install command to clipboard
+        async function copyInstallCommand(command, buttonId) {
+            try {
+                await navigator.clipboard.writeText(command);
+                const button = document.getElementById(buttonId);
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                button.classList.add('bg-green-600');
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('bg-green-600');
+                    button.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard. Please copy manually.');
+            }
         }
 
         // Toggle expanded details

@@ -14,6 +14,10 @@ publisher: ## Build the publisher tool with version info
 	@mkdir -p bin
 	go build -ldflags="-X main.Version=dev-$(shell git rev-parse --short HEAD) -X main.GitCommit=$(shell git rev-parse HEAD) -X main.BuildTime=$(shell date -u +%Y-%m-%dT%H:%M:%SZ)" -o bin/mcp-publisher ./cmd/publisher
 
+installer: ## Build the installer daemon
+	@mkdir -p bin
+	go build -o bin/mcp-installer ./cmd/installer
+
 # Schema generation targets
 generate-schema: ## Generate server.schema.json from openapi.yaml
 	@mkdir -p bin
