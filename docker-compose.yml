@@ -41,7 +41,7 @@ services:
       - MCP_REGISTRY_OIDC_PUBLISH_PERMISSIONS=${MCP_REGISTRY_OIDC_PUBLISH_PERMISSIONS:-*}
       - MCP_REGISTRY_ENABLE_REGISTRY_VALIDATION=false
     ports:
-      - "8080:8080"
+      - "9090:8080"
     volumes:
       - ./data:/data:ro
     restart: "unless-stopped"

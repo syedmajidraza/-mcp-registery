@@ -3,7 +3,7 @@
 
 yourcompany MCP Registry is a local, isolated MCP registry that provides MCP clients with a list of MCP servers. This version is rebranded and restricted to only two local MCP servers, with all remote aggregation and fallback to public registries disabled.
 
-[**Quickstart**](docs/modelcontextprotocol-io/quickstart.mdx) | [**Ecosystem Vision**](docs/design/ecosystem-vision.md) | 📖 **[Full documentation](./docs)**
+📚 [**Developer Guide**](DEVELOPER_GUIDE.md) | [**Installer Guide**](docs/INSTALLER.md) | [**Quickstart**](docs/modelcontextprotocol-io/quickstart.mdx) | 📖 **[Full documentation](./docs)**
 
 
 ## Project Status
@@ -31,7 +31,7 @@ yourcompany MCP Registry is a local, isolated MCP registry that provides MCP cli
 docker-compose up --build -d
 ```
 
-This starts the registry at [`localhost:8080`](http://localhost:8080) with PostgreSQL. The database uses ephemeral storage and is reset each time you restart the containers, ensuring a clean state for development and testing. The registry only loads the two MCP servers defined in `data/seed.json` and does not aggregate from any remote sources.
+This starts the registry at [`localhost:9090`](http://localhost:9090) with PostgreSQL. The database uses ephemeral storage and is reset each time you restart the containers, ensuring a clean state for development and testing. The registry loads 5 MCP servers defined in `data/seed.json` and does not aggregate from any remote sources.
 
 Configuration is managed via [docker-compose.yml](./docker-compose.yml). The default database name is now `mcp-registry-test` for a clean, isolated state.
 
@@ -54,7 +54,7 @@ make installer
 ./bin/mcp-installer
 ```
 
-2. Open [http://localhost:8080](http://localhost:8080) in your browser
+2. Open [http://localhost:9090](http://localhost:9090) in your browser
 3. Click the green **"Install"** button on any server
 4. Watch real-time installation progress
 
