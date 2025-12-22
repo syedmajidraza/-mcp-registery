@@ -1,6 +1,8 @@
 
 # Syed MCP Registry
 
+![Syed MCP Registry](docs/images/mcpregistery.png)
+
 A local, isolated MCP registry that provides MCP clients with a curated list of MCP servers, featuring the **PostgreSQL MCP Server** with automated installation.
 
 📚 [**Developer Guide**](DEVELOPER_GUIDE.md) | [**Quick Start**](QUICK_START.md) | [**PostgreSQL Server Guide**](docs/guides/USER_GUIDE.md) | 📖 **[Full Documentation](docs/guides/DOCUMENTATION_INDEX.md)**
