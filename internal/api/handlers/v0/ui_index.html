@@ -371,7 +371,7 @@
 
             // Special handling for PostgreSQL MCP Server
             if (server.name === 'io.github.syedmajidraza/mcp-postgres') {
-                const installCommand = `curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash`;
+                const installCommand = `curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash`;
                 const startCommand = `~/.mcp/servers/mcp-postgres/start.sh`;
                 const buttonId = `install-${server.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
 

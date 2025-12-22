@@ -12,7 +12,7 @@ A local, isolated MCP registry that provides MCP clients with a curated list of 
 ### One-Command Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 
 **After install**: Configure `.env` → Start server → Access at `http://127.0.0.1:3000`

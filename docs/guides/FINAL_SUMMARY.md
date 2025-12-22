@@ -76,7 +76,7 @@ Click the blue "Copy" button next to the curl command
 ### Step 4: Paste & Run in Terminal
 ```bash
 # Command is automatically copied to clipboard
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 
 ### Step 5: Configure Database
@@ -191,7 +191,7 @@ curl http://127.0.0.1:3000/health
 
 ### ✅ One-Command Installation
 ```bash
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 
 ### ✅ Copy Button in Registry
@@ -232,7 +232,7 @@ git push origin main
 ### Share Installation Command
 Once pushed, users anywhere can run:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 
 ---

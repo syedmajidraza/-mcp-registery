@@ -11,7 +11,7 @@ The installation script has been tested and works perfectly. Here's everything u
 Copy and paste this command into your terminal:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 
 **Or run locally:**
@@ -105,7 +105,7 @@ The server outputs logs to the terminal where `start.sh` is running.
 ### Reinstall/Update
 Just run the installer again - it will pull latest changes:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 
 ### Uninstall
@@ -162,7 +162,7 @@ uvicorn server:app --host 127.0.0.1 --port 3000
 
 ## 🎯 Summary
 
-**Install**: `curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash`
+**Install**: `curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash`
 
 **Configure**: `nano ~/.mcp/servers/mcp-postgres/mcp-server/.env`
 

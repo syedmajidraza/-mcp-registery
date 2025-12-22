@@ -5,14 +5,14 @@
 Run this single command to automatically install the PostgreSQL MCP Server:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 
 Or download and run locally:
 
 ```bash
 # Download the installer
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh -o install-postgres-mcp.sh
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh -o install-postgres-mcp.sh
 
 # Make it executable
 chmod +x install-postgres-mcp.sh

@@ -3,7 +3,7 @@
 ## Copy and Run This Command
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 
 ## What Happens Next?

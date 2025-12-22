@@ -69,8 +69,8 @@ Before you begin, ensure you have the following installed:
 
 ```bash
 # Clone the repository
-git clone https://github.com/syedmajidraza/test_mcp.git
-cd test_mcp
+git clone https://github.com/syedmajidraza/-mcp-registery.git
+cd -mcp-registery
 
 # Start the registry
 docker-compose up -d
@@ -102,10 +102,10 @@ Open your browser to **http://localhost:9090** and click the green **"Install"**
 
 ```bash
 # Clone the repository
-git clone https://github.com/syedmajidraza/test_mcp.git
+git clone https://github.com/syedmajidraza/-mcp-registery.git
 
 # Navigate to the project directory
-cd test_mcp
+cd -mcp-registery
 
 # Verify you're in the right directory
 ls -la
@@ -618,7 +618,7 @@ npm uninstall -g <package-name>
 - **Registry API:** http://localhost:9090/v0.1/
 - **API Documentation:** http://localhost:9090/docs
 - **Installer Daemon:** http://localhost:3456
-- **GitHub Repository:** https://github.com/syedmajidraza/test_mcp
+- **GitHub Repository:** https://github.com/syedmajidraza/-mcp-registery
 
 ### Port Configuration
 
@@ -687,7 +687,7 @@ pm2 stop mcp-postgres-server
 ## Getting Help
 
 - **Documentation:** [docs/INSTALLER.md](docs/INSTALLER.md)
-- **Issues:** https://github.com/syedmajidraza/test_mcp/issues
+- **Issues:** https://github.com/syedmajidraza/-mcp-registery/issues
 - **README:** [README.md](README.md)
 
 ---

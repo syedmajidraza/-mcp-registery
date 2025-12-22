@@ -19,7 +19,7 @@ When users visit **http://localhost:9090** and find your PostgreSQL MCP Server, 
 
 ### Main Installation Command
 ```
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 **[Copy Button]** - Blue button that copies the command to clipboard
 
@@ -74,7 +74,7 @@ Click the blue **"Copy"** button next to the curl command
 ### Step 4: Run in Terminal
 ```bash
 # Paste the command and run
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 
 ### Step 5: Configure Database

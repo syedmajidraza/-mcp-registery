@@ -319,7 +319,7 @@ Your server appears as:
 ### Installation via Registry
 The registry shows a **Copy button** with the installation command:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
 ```
 
 ---

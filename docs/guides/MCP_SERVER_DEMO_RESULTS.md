@@ -204,7 +204,7 @@ The PostgreSQL MCP Server demonstrates:
 1. Push scripts to GitHub
 2. Share installation command:
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash
    ```
 
 ---
