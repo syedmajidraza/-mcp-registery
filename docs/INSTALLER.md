@@ -1,6 +1,6 @@
 # MCP Server Installer
 
-The MCP Server Installer provides one-click installation of MCP servers directly from the yourcompany MCP Registry web interface.
+The MCP Server Installer provides one-click installation of MCP servers directly from the Syed MCP Registry web interface.
 
 ## Architecture
 

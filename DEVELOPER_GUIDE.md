@@ -1,6 +1,6 @@
-# Developer Guide: Installing MCP Servers from yourcompany Registry
+# Developer Guide: Installing MCP Servers from Syed Registry
 
-This guide walks you through the complete process of discovering, installing, and running MCP servers from the yourcompany MCP Registry.
+This guide walks you through the complete process of discovering, installing, and running MCP servers from the Syed MCP Registry.
 
 ---
 
@@ -230,7 +230,7 @@ Open your web browser and navigate to:
 http://localhost:9090
 ```
 
-You'll see the **yourcompany MCP Registry** interface with 5 available MCP servers:
+You'll see the **Syed MCP Registry** interface with 5 available MCP servers:
 
 1. **markitdown-js** - Convert documents to Markdown (JavaScript)
 2. **markitdown-ts** - Convert documents to Markdown (TypeScript)
@@ -696,7 +696,7 @@ pm2 stop mcp-postgres-server
 
 You've learned how to:
 
-✅ Start the yourcompany MCP Registry
+✅ Start the Syed MCP Registry
 ✅ Launch the installer daemon
 ✅ Browse available MCP servers
 ✅ Install MCP servers (one-click or manual)

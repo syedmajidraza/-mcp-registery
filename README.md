@@ -1,5 +1,5 @@
 
-# yourcompany MCP Registry
+# Syed MCP Registry
 
 A local, isolated MCP registry that provides MCP clients with a curated list of MCP servers, featuring the **PostgreSQL MCP Server** with automated installation.
 
@@ -44,7 +44,7 @@ curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts
 #### Running the server
 
 ```bash
-# Start the local yourcompany MCP Registry environment
+# Start the local Syed MCP Registry environment
 docker-compose up --build -d
 ```
 
@@ -55,7 +55,7 @@ Configuration is managed via [docker-compose.yml](./docker-compose.yml). The def
 
 <!--
 ## Screenshot
-No screenshot is currently included. Add a screenshot of the yourcompany MCP Registry UI here if desired.
+No screenshot is currently included. Add a screenshot of the Syed MCP Registry UI here if desired.
 -->
 
 
