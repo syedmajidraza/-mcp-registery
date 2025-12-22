@@ -369,6 +369,44 @@
             const installDiv = document.createElement('div');
             installDiv.className = 'border-t px-5 py-3 bg-gray-50';
 
+            // Special handling for PostgreSQL MCP Server
+            if (server.name === 'io.github.syedmajidraza/mcp-postgres') {
+                const installCommand = `curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash`;
+                const startCommand = `~/.mcp/servers/mcp-postgres/start.sh`;
+                const buttonId = `install-${server.name.replace(/[^a-zA-Z0-9]/g, '-')}`;
+
+                installDiv.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2">
+                            <code class="flex-1 text-xs bg-white px-3 py-2 rounded border border-gray-300 font-mono text-gray-700 overflow-x-auto">${escapeHtml(installCommand)}</code>
+                            <button
+                                id="${buttonId}-copy"
+                                class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors whitespace-nowrap"
+                                onclick="event.stopPropagation(); copyInstallCommand('${escapeHtml(installCommand)}', '${buttonId}-copy')"
+                            >
+                                Copy
+                            </button>
+                        </div>
+                        <div class="text-xs text-gray-600 bg-blue-50 px-3 py-2 rounded border border-blue-200">
+                            <strong>After install:</strong>
+                            <ol class="list-decimal ml-4 mt-1 space-y-1">
+                                <li>Configure: <code class="bg-white px-1 py-0.5 rounded text-xs">nano ~/.mcp/servers/mcp-postgres/mcp-server/.env</code></li>
+                                <li>Start: <code class="bg-white px-1 py-0.5 rounded text-xs">${escapeHtml(startCommand)}</code>
+                                    <button
+                                        id="${buttonId}-copy-start"
+                                        class="ml-1 px-2 py-0.5 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+                                        onclick="event.stopPropagation(); copyInstallCommand('${escapeHtml(startCommand)}', '${buttonId}-copy-start')"
+                                    >
+                                        Copy
+                                    </button>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                `;
+                return installDiv;
+            }
+
             // Get the first npm package (most common case)
             const npmPackage = server.packages?.find(pkg => pkg.registryType === 'npm');
 

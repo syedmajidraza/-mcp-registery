@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostgreSQL MCP Server - Quick Install</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #718096;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #4a5568;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .command-box {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .command {
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 14px;
+            color: #2d3748;
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .copy-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        .copy-btn.copied {
+            background: #48bb78;
+        }
+
+        .steps {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .step {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .step:nth-child(1)::before { content: '1'; }
+        .step:nth-child(2)::before { content: '2'; }
+        .step:nth-child(3)::before { content: '3'; }
+
+        .step-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .step-description {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .tool-card {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .tool-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .tool-desc {
+            font-size: 13px;
+            color: #718096;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #48bb78;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            animation: slideIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 PostgreSQL MCP Server</h1>
+        <p class="subtitle">One-click installation for your local environment</p>
+
+        <div class="section">
+            <div class="section-title">📋 Installation Command</div>
+            <div class="command-box">
+                <div class="command" id="installCommand">curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash</div>
+                <button class="copy-btn" onclick="copyInstallCommand()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span id="copyText">Copy Command</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📝 What Gets Installed</div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-title">Automated Setup</div>
+                    <div class="step-description">Checks Python 3 & Git, clones repository, creates virtual environment</div>
+                </div>
+                <div class="step">
+                    <div class="step-title">Dependencies</div>
+                    <div class="step-description">Installs FastAPI, uvicorn, asyncpg, and all required packages</div>
+                </div>
+                <div class="step">
+                    <div class="step-title">Quick Start Scripts</div>
+                    <div class="step-description">Creates start.sh and stop.sh for easy server management</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🛠️ Available Tools</div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-name">list_tables</div>
+                    <div class="tool-desc">List all database tables</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">describe_table</div>
+                    <div class="tool-desc">Get table schema</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">query_database</div>
+                    <div class="tool-desc">Execute SELECT queries</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">execute_sql</div>
+                    <div class="tool-desc">Run INSERT/UPDATE/DELETE</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">⚡ After Installation</div>
+            <div class="command-box">
+                <p style="margin-bottom: 10px; color: #4a5568;"><strong>1. Configure Database:</strong></p>
+                <div class="command">nano ~/.mcp/servers/mcp-postgres/mcp-server/.env</div>
+
+                <p style="margin: 20px 0 10px; color: #4a5568;"><strong>2. Start Server:</strong></p>
+                <div class="command">~/.mcp/servers/mcp-postgres/start.sh</div>
+                <button class="copy-btn" onclick="copyStartCommand()" style="margin-bottom: 15px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span id="copyStartText">Copy Start Command</span>
+                </button>
+
+                <p style="margin-bottom: 10px; color: #4a5568;"><strong>3. Stop Server:</strong></p>
+                <div class="command">~/.mcp/servers/mcp-postgres/stop.sh</div>
+                <button class="copy-btn" onclick="copyStopCommand()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span id="copyStopText">Copy Stop Command</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">ℹ️ Server Info</div>
+            <p style="color: #718096; line-height: 1.8;">
+                <span class="badge">Location</span> ~/.mcp/servers/mcp-postgres<br>
+                <span class="badge">URL</span> http://127.0.0.1:3000<br>
+                <span class="badge">Version</span> 1.0.0
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>
+                Repository: <a href="https://github.com/syedmajidraza/mcp-postgres" target="_blank">syedmajidraza/mcp-postgres</a><br>
+                Registry: <a href="http://localhost:9090" target="_blank">localhost:9090</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function copyInstallCommand() {
+            const command = document.getElementById('installCommand').textContent;
+            navigator.clipboard.writeText(command).then(() => {
+                const btn = event.currentTarget;
+                const text = document.getElementById('copyText');
+                const originalBg = btn.style.background;
+
+                btn.classList.add('copied');
+                text.textContent = '✓ Copied!';
+
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    text.textContent = 'Copy Command';
+                }, 2000);
+            });
+        }
+
+        function copyStartCommand() {
+            const command = '~/.mcp/servers/mcp-postgres/start.sh';
+            navigator.clipboard.writeText(command).then(() => {
+                const btn = event.currentTarget;
+                const text = document.getElementById('copyStartText');
+
+                btn.classList.add('copied');
+                text.textContent = '✓ Copied!';
+
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    text.textContent = 'Copy Start Command';
+                }, 2000);
+            });
+        }
+
+        function copyStopCommand() {
+            const command = '~/.mcp/servers/mcp-postgres/stop.sh';
+            navigator.clipboard.writeText(command).then(() => {
+                const btn = event.currentTarget;
+                const text = document.getElementById('copyStopText');
+
+                btn.classList.add('copied');
+                text.textContent = '✓ Copied!';
+
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    text.textContent = 'Copy Stop Command';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

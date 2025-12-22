@@ -1,0 +1,64 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              ✅ PostgreSQL MCP Server - Ready to Use!                        ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📋 INSTALLATION COMMAND (Copy This):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+📝 LOCAL TESTING (Since not pushed to GitHub yet):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/Users/syedraza/registry/scripts/install-postgres-mcp.sh
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+🎯 AFTER INSTALLATION - USER COMMANDS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣  Configure database:
+    nano ~/.mcp/servers/mcp-postgres/mcp-server/.env
+
+2️⃣  Start server:
+    ~/.mcp/servers/mcp-postgres/start.sh
+
+3️⃣  Stop server:
+    ~/.mcp/servers/mcp-postgres/stop.sh
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+✅ VERIFIED WORKING:
+  • Installation script tested ✓
+  • Dependencies installed ✓
+  • Scripts created ✓
+  • Server appears in registry at http://localhost:9090 ✓
+
+
+📦 INSTALLATION DETAILS:
+  • Location: ~/.mcp/servers/mcp-postgres
+  • Server runs on: http://127.0.0.1:3000
+  • Tools: list_tables, describe_table, query_database, execute_sql
+
+
+📤 TO ENABLE REMOTE INSTALLATION (GitHub):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd /Users/syedraza/registry
+git add scripts/install-postgres-mcp.sh scripts/show-postgres-install.sh
+git add docs/POSTGRES_INSTALL.md QUICK_INSTALL_POSTGRES.md
+git add POSTGRES_MCP_INSTALL.md USER_GUIDE.md SETUP_COMPLETE.md
+git add data/seed.json
+git commit -m "Add automated PostgreSQL MCP Server installer"
+git push origin main
+
+Then the curl command will work from anywhere!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
