@@ -1,18 +1,35 @@
 
 # yourcompany MCP Registry
 
-yourcompany MCP Registry is a local, isolated MCP registry that provides MCP clients with a list of MCP servers. This version is rebranded and restricted to only two local MCP servers, with all remote aggregation and fallback to public registries disabled.
+A local, isolated MCP registry that provides MCP clients with a curated list of MCP servers, featuring the **PostgreSQL MCP Server** with automated installation.
 
-📚 [**Developer Guide**](DEVELOPER_GUIDE.md) | [**Installer Guide**](docs/INSTALLER.md) | [**Quickstart**](docs/modelcontextprotocol-io/quickstart.mdx) | 📖 **[Full documentation](./docs)**
+📚 [**Developer Guide**](DEVELOPER_GUIDE.md) | [**Quick Start**](QUICK_START.md) | [**PostgreSQL Server Guide**](docs/guides/USER_GUIDE.md) | 📖 **[Full Documentation](docs/guides/DOCUMENTATION_INDEX.md)**
 
+---
+
+## 🚀 Featured: PostgreSQL MCP Server
+
+### One-Command Installation
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/syedmajidraza/registry/main/scripts/install-postgres-mcp.sh | bash
+```
+
+**After install**: Configure `.env` → Start server → Access at `http://127.0.0.1:3000`
+
+📖 **[Complete Guide →](docs/guides/USER_GUIDE.md)** | **[All Docs →](docs/guides/DOCUMENTATION_INDEX.md)**
+
+---
 
 ## Project Status
 
-**2025-12-05 update:**
-- The registry is now fully local-only and rebranded as "yourcompany MCP Registry."
-- Only two MCP servers are listed, as defined in `data/seed.json`.
-- Remote aggregation and fallback to public registries are disabled at the code level.
-- Docker Compose and database setup have been updated for a clean, isolated development environment.
+**2025-12-22 update:**
+- 🟢 **PostgreSQL MCP Server** integrated with automated installation
+- 📋 **Copy button UI** in registry for easy installation
+- 📚 **Complete documentation** (11 comprehensive guides)
+- 🛠️ **5 MCP servers** listed in registry
+- 🏠 **Local-only registry** - no remote aggregation
+- 🐳 **Docker Compose** setup with clean, isolated environment
 
 
 ## Quick Start
@@ -130,6 +147,29 @@ The registry validates namespace ownership when publishing. For example:
 - To publish `ai.alpic.test/test-mcp-server`, you must prove ownership of the relevant namespace.
 
 
-## More Documentation
+## 📚 Complete Documentation
 
-See the [documentation](./docs) for more details.
+### PostgreSQL MCP Server Guides
+
+| Guide | Description | Best For |
+|-------|-------------|----------|
+| [📑 Documentation Index](docs/guides/DOCUMENTATION_INDEX.md) | Master navigation for all docs | Finding any documentation |
+| [📖 Working Setup](docs/guides/WORKING_SETUP.md) | Current setup reference | Operating the server |
+| [🔄 Migration Guide](docs/guides/MIGRATION_TO_STDIO_MCP.md) | Convert to stdio MCP | Upgrading to standard protocol |
+| [👤 User Guide](docs/guides/USER_GUIDE.md) | Installation and usage | End users |
+| [⚡ Quick Install](docs/guides/QUICK_INSTALL_POSTGRES.md) | One-command setup | Fast installation |
+| [📊 Final Summary](docs/guides/FINAL_SUMMARY.md) | Complete overview | High-level understanding |
+| [🧪 Demo Results](docs/guides/MCP_SERVER_DEMO_RESULTS.md) | Test results and examples | Verifying functionality |
+| [🎨 Registry UI](docs/guides/REGISTRY_UI_UPDATED.md) | UI features | Understanding UI changes |
+| [🔧 Manual Install](docs/guides/POSTGRES_MCP_INSTALL.md) | Manual setup guide | Custom installation |
+| [✅ Setup Complete](docs/guides/SETUP_COMPLETE.md) | What was configured | Understanding setup |
+| [📋 Commands](docs/guides/INSTALLATION_COMMANDS.txt) | Quick reference | Command cheat sheet |
+
+### Additional Resources
+
+- [Detailed Installation Guide](docs/POSTGRES_INSTALL.md)
+- [Standalone HTML Page](docs/install-postgres-mcp.html)
+- [Installer Documentation](docs/INSTALLER.md)
+- [Quickstart Guide](docs/modelcontextprotocol-io/quickstart.mdx)
+
+**Start here**: [📑 Documentation Index](docs/guides/DOCUMENTATION_INDEX.md)
