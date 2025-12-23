@@ -9,7 +9,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o mcp-registry ./cmd/registry
 
 # Final stage
-FROM alpine:3.18
+FROM alpine:3.23
 WORKDIR /app
 COPY --from=builder /app/mcp-registry ./mcp-registry
 COPY data ./data
