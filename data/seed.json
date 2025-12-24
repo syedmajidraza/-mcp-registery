@@ -84,7 +84,7 @@
     "name": "io.github.syedmajidraza/mcp-postgres",
     "description": "MCP PostgreSQL server - A Python-based MCP server for interacting with PostgreSQL databases. Provides database schema inspection, query execution, and table management capabilities.",
     "repository": {
-      "url": "https://github.com/syedmajidraza/mcp-postgres/tree/main/mcp-server",
+      "url": "https://github.com/syedmajidraza/mcp-postgres",
       "source": "github"
     },
     "version": "1.0.0",
