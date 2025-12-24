@@ -82,38 +82,21 @@
   {
     "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
     "name": "io.github.syedmajidraza/mcp-postgres",
-    "description": "PostgreSQL MCP Server - Query and manage PostgreSQL databases with tools for listing tables, describing schemas, and executing SQL queries. Note: This server uses HTTP/FastAPI (not stdio). Use the automated installer script for easy setup.",
+    "description": "MCP PostgreSQL server - A Python-based MCP server for interacting with PostgreSQL databases. Provides database schema inspection, query execution, and table management capabilities.",
     "repository": {
-      "url": "https://github.com/syedmajidraza/mcp-postgres",
+      "url": "https://github.com/syedmajidraza/mcp-postgres/tree/main/mcp-server",
       "source": "github"
     },
     "version": "1.0.0",
     "packages": [
       {
-        "registryType": "npm",
-        "identifier": "mcp-postgres-manual-install",
+        "registryType": "custom",
+        "identifier": "mcp-postgres",
         "version": "1.0.0",
+        "install": "curl -fsSL https://raw.githubusercontent.com/syedmajidraza/-mcp-registery/main/scripts/install-postgres-mcp.sh | bash",
         "transport": {
           "type": "stdio"
         }
-      }
-    ],
-    "tools": [
-      {
-        "name": "list_tables",
-        "description": "List all tables in the PostgreSQL database"
-      },
-      {
-        "name": "describe_table",
-        "description": "Get detailed schema information for a specific table"
-      },
-      {
-        "name": "query_database",
-        "description": "Execute SELECT queries on the PostgreSQL database"
-      },
-      {
-        "name": "execute_sql",
-        "description": "Execute INSERT, UPDATE, DELETE, and CREATE statements"
       }
     ]
   }

@@ -43,20 +43,56 @@ echo -e "\n${YELLOW}[2/6]${NC} Creating installation directory..."
 mkdir -p "$INSTALL_DIR"
 echo -e "${GREEN}✓${NC} Directory created: $INSTALL_DIR"
 
-# Step 3: Clone repository
-echo -e "\n${YELLOW}[3/6]${NC} Cloning repository..."
-if [ -d "$INSTALL_DIR/.git" ]; then
+# Step 3: Clone repository (sparse checkout for mcp-server only)
+echo -e "\n${YELLOW}[3/6]${NC} Cloning mcp-server from repository..."
+if [ -d "$MCP_SERVER_DIR/.git" ]; then
     echo -e "${BLUE}Repository already exists. Pulling latest changes...${NC}"
-    cd "$INSTALL_DIR"
+    cd "$MCP_SERVER_DIR"
     git pull origin main
 else
-    git clone "$REPO_URL" "$INSTALL_DIR"
+    # Clean up if INSTALL_DIR exists but MCP_SERVER_DIR doesn't
+    if [ -d "$INSTALL_DIR" ] && [ ! -d "$MCP_SERVER_DIR" ]; then
+        echo -e "${YELLOW}Cleaning up incomplete installation...${NC}"
+        rm -rf "$INSTALL_DIR"
+    fi
+
+    # Use sparse checkout to only get the mcp-server directory
+    mkdir -p "$INSTALL_DIR"
+    cd "$INSTALL_DIR"
+
+    # Use a unique temporary directory name to avoid conflicts
+    TEMP_DIR="temp_repo_$$"
+
+    # Initialize git with sparse checkout
+    git clone --filter=blob:none --sparse "$REPO_URL" "$TEMP_DIR"
+    cd "$TEMP_DIR"
+    git sparse-checkout set mcp-server
+
+    # Move mcp-server contents to the final location and clean up
+    mv mcp-server "$MCP_SERVER_DIR"
+    cd "$INSTALL_DIR"
+    rm -rf "$TEMP_DIR"
+
+    # Initialize git in the mcp-server directory for updates
+    cd "$MCP_SERVER_DIR"
+    git init
+    git remote add origin "$REPO_URL"
+    git config core.sparseCheckout true
+    mkdir -p .git/info
+    echo "mcp-server/*" > .git/info/sparse-checkout
+    git fetch origin main
+    git checkout main
+
+    # Check if files were retrieved
+    if [ ! -f "server.py" ]; then
+        echo -e "${RED}Error: MCP server files not found after checkout${NC}"
+        exit 1
+    fi
 fi
-echo -e "${GREEN}✓${NC} Repository cloned successfully"
+echo -e "${GREEN}✓${NC} MCP server files retrieved successfully"
 
 # Step 4: Create virtual environment
 echo -e "\n${YELLOW}[4/6]${NC} Creating Python virtual environment..."
-cd "$MCP_SERVER_DIR"
 if [ -d "venv" ]; then
     echo -e "${BLUE}Virtual environment already exists. Skipping...${NC}"
 else
@@ -81,11 +117,11 @@ else
     echo -e "${BLUE}.env file already exists. Skipping...${NC}"
 fi
 
-# Create a convenient start script
+# Create a convenient start script at the MCP server directory
 echo -e "\n${YELLOW}Creating start script...${NC}"
-cat > "$INSTALL_DIR/start.sh" << 'EOF'
+cat > "$MCP_SERVER_DIR/start.sh" << 'EOF'
 #!/bin/bash
-cd "$(dirname "$0")/mcp-server"
+cd "$(dirname "$0")"
 source venv/bin/activate
 echo "Starting PostgreSQL MCP Server on http://127.0.0.1:3000"
 echo "Press Ctrl+C to stop the server"
@@ -93,11 +129,11 @@ echo ""
 uvicorn server:app --host 127.0.0.1 --port 3000
 EOF
 
-chmod +x "$INSTALL_DIR/start.sh"
-echo -e "${GREEN}✓${NC} Start script created: $INSTALL_DIR/start.sh"
+chmod +x "$MCP_SERVER_DIR/start.sh"
+echo -e "${GREEN}✓${NC} Start script created: $MCP_SERVER_DIR/start.sh"
 
 # Create a stop script
-cat > "$INSTALL_DIR/stop.sh" << 'EOF'
+cat > "$MCP_SERVER_DIR/stop.sh" << 'EOF'
 #!/bin/bash
 PID=$(lsof -ti:3000)
 if [ -z "$PID" ]; then
@@ -108,8 +144,8 @@ else
 fi
 EOF
 
-chmod +x "$INSTALL_DIR/stop.sh"
-echo -e "${GREEN}✓${NC} Stop script created: $INSTALL_DIR/stop.sh"
+chmod +x "$MCP_SERVER_DIR/stop.sh"
+echo -e "${GREEN}✓${NC} Stop script created: $MCP_SERVER_DIR/stop.sh"
 
 # Installation complete
 echo -e "\n${GREEN}========================================${NC}"
@@ -128,10 +164,10 @@ echo -e "   - DB_USER (your database user)"
 echo -e "   - DB_PASSWORD (your database password)\n"
 
 echo -e "2. Start the server:"
-echo -e "   ${YELLOW}$INSTALL_DIR/start.sh${NC}\n"
+echo -e "   ${YELLOW}$MCP_SERVER_DIR/start.sh${NC}\n"
 
 echo -e "3. Stop the server (when needed):"
-echo -e "   ${YELLOW}$INSTALL_DIR/stop.sh${NC}\n"
+echo -e "   ${YELLOW}$MCP_SERVER_DIR/stop.sh${NC}\n"
 
-echo -e "${BLUE}Installation location:${NC} $INSTALL_DIR"
+echo -e "${BLUE}Installation location:${NC} $MCP_SERVER_DIR"
 echo -e "${BLUE}Server will run on:${NC} http://127.0.0.1:3000\n"
