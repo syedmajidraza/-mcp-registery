@@ -1,8 +1,18 @@
 #!/bin/bash
 # PostgreSQL MCP Server - Automated Installation Script
 # This script automates the installation of the PostgreSQL MCP server
+#
+# Usage:
+#   ./install-postgres-mcp.sh           # Normal installation (updates if exists)
+#   ./install-postgres-mcp.sh --force   # Force reinstall (delete and recreate)
 
 set -e  # Exit on any error
+
+# Check for --force flag
+FORCE_REINSTALL=false
+if [ "$1" == "--force" ] || [ "$1" == "-f" ]; then
+    FORCE_REINSTALL=true
+fi
 
 # Colors for output
 RED='\033[0;31m'
@@ -19,6 +29,13 @@ MCP_SERVER_DIR="$INSTALL_DIR/mcp-server"
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}PostgreSQL MCP Server Installation${NC}"
 echo -e "${BLUE}========================================${NC}\n"
+
+# Handle force reinstall
+if [ "$FORCE_REINSTALL" = true ] && [ -d "$INSTALL_DIR" ]; then
+    echo -e "${YELLOW}Force reinstall requested. Removing existing installation...${NC}"
+    rm -rf "$INSTALL_DIR"
+    echo -e "${GREEN}✓${NC} Existing installation removed\n"
+fi
 
 # Step 1: Check prerequisites
 echo -e "${YELLOW}[1/6]${NC} Checking prerequisites..."
@@ -110,9 +127,8 @@ echo -e "${GREEN}✓${NC} Dependencies installed successfully"
 # Step 6: Configure environment
 echo -e "\n${YELLOW}[6/6]${NC} Setting up environment configuration..."
 if [ ! -f ".env" ]; then
-    cp .env.example .env
-    echo -e "${GREEN}✓${NC} Environment file created: $MCP_SERVER_DIR/.env"
-    echo -e "${YELLOW}⚠${NC}  You need to configure your database credentials in .env"
+    # Don't create .env file - let start.sh prompt for credentials interactively
+    echo -e "${GREEN}✓${NC} Setup complete - database credentials will be requested on first start"
 else
     echo -e "${BLUE}.env file already exists. Skipping...${NC}"
 fi
@@ -123,8 +139,65 @@ cat > "$MCP_SERVER_DIR/start.sh" << 'EOF'
 #!/bin/bash
 cd "$(dirname "$0")"
 source venv/bin/activate
-echo "Starting PostgreSQL MCP Server on http://127.0.0.1:3000"
-echo "Press Ctrl+C to stop the server"
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Check if .env file exists and has database configuration
+if [ ! -f .env ] || ! grep -q "^DB_NAME=" .env || [ -z "$(grep '^DB_NAME=' .env | cut -d= -f2)" ]; then
+    echo -e "${YELLOW}========================================${NC}"
+    echo -e "${YELLOW}PostgreSQL MCP Server - First Time Setup${NC}"
+    echo -e "${YELLOW}========================================${NC}\n"
+
+    # Prompt for database credentials
+    echo -e "${BLUE}Please enter your PostgreSQL database credentials:${NC}\n"
+
+    read -p "Database Host [localhost]: " DB_HOST
+    DB_HOST=${DB_HOST:-localhost}
+
+    read -p "Database Port [5432]: " DB_PORT
+    DB_PORT=${DB_PORT:-5432}
+
+    read -p "Database Name: " DB_NAME
+    while [ -z "$DB_NAME" ]; do
+        echo -e "${YELLOW}Database name is required!${NC}"
+        read -p "Database Name: " DB_NAME
+    done
+
+    read -p "Database User [postgres]: " DB_USER
+    DB_USER=${DB_USER:-postgres}
+
+    read -sp "Database Password: " DB_PASSWORD
+    echo ""
+    while [ -z "$DB_PASSWORD" ]; do
+        echo -e "${YELLOW}Password is required!${NC}"
+        read -sp "Database Password: " DB_PASSWORD
+        echo ""
+    done
+
+    # Create .env file
+    cat > .env << ENVEOF
+# PostgreSQL Database Configuration
+DB_HOST=$DB_HOST
+DB_PORT=$DB_PORT
+DB_NAME=$DB_NAME
+DB_USER=$DB_USER
+DB_PASSWORD=$DB_PASSWORD
+
+# Server Configuration
+SERVER_HOST=127.0.0.1
+SERVER_PORT=3000
+ENVEOF
+
+    echo -e "\n${GREEN}✓${NC} Configuration saved to .env file"
+    echo -e "${YELLOW}Note: You can edit .env file anytime to change these settings${NC}\n"
+fi
+
+echo -e "${GREEN}Starting PostgreSQL MCP Server on http://127.0.0.1:3000${NC}"
+echo -e "${YELLOW}Press Ctrl+C to stop the server${NC}"
 echo ""
 uvicorn server:app --host 127.0.0.1 --port 3000
 EOF
@@ -147,6 +220,23 @@ EOF
 chmod +x "$MCP_SERVER_DIR/stop.sh"
 echo -e "${GREEN}✓${NC} Stop script created: $MCP_SERVER_DIR/stop.sh"
 
+# Create wrapper scripts at parent level for convenience
+cat > "$INSTALL_DIR/start.sh" << 'EOF'
+#!/bin/bash
+cd "$(dirname "$0")/mcp-server"
+exec ./start.sh
+EOF
+
+cat > "$INSTALL_DIR/stop.sh" << 'EOF'
+#!/bin/bash
+cd "$(dirname "$0")/mcp-server"
+exec ./stop.sh
+EOF
+
+chmod +x "$INSTALL_DIR/start.sh"
+chmod +x "$INSTALL_DIR/stop.sh"
+echo -e "${GREEN}✓${NC} Wrapper scripts created at: $INSTALL_DIR"
+
 # Installation complete
 echo -e "\n${GREEN}========================================${NC}"
 echo -e "${GREEN}Installation completed successfully!${NC}"
@@ -154,20 +244,18 @@ echo -e "${GREEN}========================================${NC}\n"
 
 # Next steps
 echo -e "${BLUE}Next Steps:${NC}\n"
-echo -e "1. Configure your PostgreSQL database credentials:"
-echo -e "   ${YELLOW}nano $MCP_SERVER_DIR/.env${NC}\n"
-echo -e "   Required variables:"
-echo -e "   - DB_HOST (e.g., localhost)"
-echo -e "   - DB_PORT (e.g., 5432)"
-echo -e "   - DB_NAME (your database name)"
-echo -e "   - DB_USER (your database user)"
-echo -e "   - DB_PASSWORD (your database password)\n"
-
-echo -e "2. Start the server:"
+echo -e "1. Start the server (either command works):"
+echo -e "   ${YELLOW}$INSTALL_DIR/start.sh${NC}"
 echo -e "   ${YELLOW}$MCP_SERVER_DIR/start.sh${NC}\n"
+echo -e "   ${BLUE}On first start, you'll be prompted to enter your database credentials.${NC}\n"
 
-echo -e "3. Stop the server (when needed):"
+echo -e "2. Stop the server (when needed):"
+echo -e "   ${YELLOW}$INSTALL_DIR/stop.sh${NC}"
 echo -e "   ${YELLOW}$MCP_SERVER_DIR/stop.sh${NC}\n"
 
+echo -e "3. To change database settings later, edit:"
+echo -e "   ${YELLOW}$MCP_SERVER_DIR/.env${NC}\n"
+
 echo -e "${BLUE}Installation location:${NC} $MCP_SERVER_DIR"
+echo -e "${BLUE}Convenient wrapper scripts:${NC} $INSTALL_DIR/start.sh, $INSTALL_DIR/stop.sh"
 echo -e "${BLUE}Server will run on:${NC} http://127.0.0.1:3000\n"
